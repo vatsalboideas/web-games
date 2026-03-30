@@ -1,797 +1,1205 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chip Bowl Blitz 🥔</title>
+  <title>Chip Bowl Blitz: Pro Edition 🥔</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;800&family=Space+Grotesk:wght@300;700&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --bg:       #0f0c1d;
-      --surface:  #1a1730;
-      --accent:   #f5a623;
-      --accent2:  #e84393;
-      --green:    #39ff14;
-      --text:     #f0eaff;
-      --muted:    #7b6fa0;
+      --bg: #0f0c1d;
+      --surface: #1a1730;
+      /* Team-led variables */
+      --primary: #f5a623;
+      --secondary: #e84393;
+      --accent-glow: rgba(245, 166, 35, 0.4);
+      --text: #f0eaff;
+      --muted: #7b6fa0;
+      --green: #39ff14;
+    }
+
+    /* Themes */
+    body.theme-solar {
+      --primary: #ff5e00;
+      --secondary: #ffe600;
+      --bg: #1d0c0c;
+      --accent-glow: rgba(255, 94, 0, 0.4);
+    }
+
+    body.theme-glacier {
+      --primary: #00d2ff;
+      --secondary: #ffffff;
+      --bg: #0c161d;
+      --accent-glow: rgba(0, 210, 255, 0.4);
+    }
+
+    body.theme-shadow {
+      --primary: #a300ff;
+      --secondary: #000000;
+      --bg: #0d0c1d;
+      --accent-glow: rgba(163, 0, 255, 0.4);
+    }
+
+    body.theme-forest {
+      --primary: #2ecc71;
+      --secondary: #f1c40f;
+      --bg: #0c1d13;
+      --accent-glow: rgba(46, 204, 113, 0.4);
     }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       overflow: hidden;
+      transition: background 0.8s ease;
     }
 
-    /* ── Stars background ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
+    /* Background Effects */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
       background:
-        radial-gradient(circle at 20% 30%, rgba(245,166,35,.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(232,67,147,.08) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(245, 166, 35, 0.05) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* ── Header ── */
     header {
-      position: relative;
-      z-index: 10;
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
       text-align: center;
-      padding: 18px 24px 8px;
-      width: 100%;
+      padding: 8px 30px;
+      pointer-events: none;
+      background: rgba(15, 12, 29, 0.95);
+      border: 1.5px solid var(--primary);
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-glow);
     }
 
     header h1 {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.6rem, 4vw, 2.8rem);
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 1px;
-      text-shadow: none;
-      filter: drop-shadow(0 0 18px rgba(245,166,35,.5));
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
       animation: pulse-glow 3s ease-in-out infinite;
     }
 
     @keyframes pulse-glow {
-      0%, 100% { filter: drop-shadow(0 0 14px rgba(245,166,35,.4)); }
-      50%       { filter: drop-shadow(0 0 28px rgba(232,67,147,.6)); }
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 14px var(--accent-glow));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 28px var(--secondary));
+      }
     }
 
-    header p {
-      color: var(--muted);
-      font-size: .8rem;
-      margin-top: 2px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    /* ── HUD row ── */
     .hud {
-      position: relative;
-      z-index: 10;
+      position: fixed;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
       display: flex;
-      gap: 20px;
-      align-items: center;
-      padding: 6px 20px;
-      margin-bottom: 6px;
+      gap: 10px;
     }
 
     .hud-card {
-      background: var(--surface);
-      border: 1px solid rgba(245,166,35,.2);
-      border-radius: 14px;
-      padding: 8px 20px;
+      background: rgba(15, 12, 29, 0.95);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 6px 16px;
       text-align: center;
-      min-width: 90px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+      min-width: 80px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     }
 
     .hud-card .label {
-      font-size: .6rem;
-      letter-spacing: 2px;
+      font-size: 0.6rem;
       color: var(--muted);
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .hud-card .value {
       font-family: 'Fredoka One', cursive;
-      font-size: 1.8rem;
-      line-height: 1;
+      font-size: 1.5rem;
+      color: var(--primary);
     }
 
-    #score-val  { color: var(--accent); }
-    #chips-val  { color: var(--accent2); }
-    #streak-val { color: var(--green); }
+    /* Player badge in HUD */
+    .player-badge {
+      background: rgba(10, 8, 24, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
 
-    /* ── Canvas wrapper ── */
-    .canvas-wrap {
-      position: relative;
-      z-index: 5;
-      border-radius: 24px;
+    .player-badge .p-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #000;
+      font-family: 'Fredoka One', cursive;
+      flex-shrink: 0;
+    }
+
+    .player-badge .p-name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.9rem;
+      color: var(--text);
+      max-width: 100px;
       overflow: hidden;
-      border: 2px solid rgba(245,166,35,.15);
-      box-shadow:
-        0 0 0 1px rgba(245,166,35,.08),
-        0 20px 60px rgba(0,0,0,.6),
-        inset 0 0 80px rgba(15,12,29,.8);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Player name input */
+    .name-input-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .name-input-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      align-self: flex-start;
+      padding-left: 4px;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 50px;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      outline: none;
+      text-align: center;
+      letter-spacing: 1px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .name-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .name-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .canvas-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
     }
 
     #gameCanvas {
       display: block;
       cursor: crosshair;
-      background: transparent;
+      width: 100vw;
+      height: 100vh;
     }
 
-    /* ── Overlay messages ── */
+    /* Overlays */
     .overlay {
       position: absolute;
       inset: 0;
+      background: rgba(15, 12, 29, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      border-radius: 22px;
-      backdrop-filter: blur(6px);
-      background: rgba(15,12,29,.75);
-      z-index: 20;
-      transition: opacity .4s ease;
+      padding: 20px;
+      transition: opacity 0.5s ease;
     }
 
-    .overlay h2 {
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Team Switcher */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .team-card {
+      background: #1e1b3a;
+      border: 2px solid #332d5e;
+      border-radius: 15px;
+      padding: 15px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .team-card.selected {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .team-card .team-icon {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .team-card .team-name {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      text-align: center;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 1.1rem;
     }
 
-    .overlay p {
+    .team-card .team-bonus {
+      font-size: 0.7rem;
       color: var(--muted);
-      font-size: .9rem;
-      text-align: center;
-      max-width: 260px;
     }
 
     .btn {
-      cursor: pointer;
-      border: none;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      padding: 12px 36px;
+      margin-top: 25px;
+      padding: 12px 40px;
       border-radius: 50px;
-      letter-spacing: 1px;
-      box-shadow: 0 6px 24px rgba(245,166,35,.4);
-      transition: transform .15s, box-shadow .15s;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 5px 20px var(--accent-glow);
+      transition: transform 0.2s;
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(245,166,35,.55);
+      transform: scale(1.05);
     }
 
-    .btn:active { transform: translateY(0); }
+    /* Wind Indicator */
+    .wind-meter {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: rgba(10, 8, 24, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 14px 18px;
+      min-width: 110px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.5s ease, box-shadow 0.5s ease;
+    }
 
-    /* ── back link ── */
+    .wind-meter.calm {
+      border-color: rgba(100, 255, 100, 0.25);
+      box-shadow: 0 0 20px rgba(100, 255, 100, 0.08), 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .wind-meter.light {
+      border-color: rgba(255, 200, 50, 0.35);
+      box-shadow: 0 0 20px rgba(255, 200, 50, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .wind-meter.heavy {
+      border-color: rgba(255, 80, 80, 0.5);
+      box-shadow: 0 0 24px rgba(255, 80, 80, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .wind-meter.shield {
+      border-color: rgba(46, 204, 113, 0.5);
+      box-shadow: 0 0 20px rgba(46, 204, 113, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .wind-header {
+      font-size: 0.52rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      opacity: 0.8;
+    }
+
+    .wind-arrow {
+      font-size: 2rem;
+      transition: transform 0.6s cubic-bezier(.34, 1.56, .64, 1);
+      color: var(--primary);
+      display: block;
+      line-height: 1;
+    }
+
+    @keyframes wind-sway {
+
+      0%,
+      100% {
+        transform: rotate(-15deg);
+      }
+
+      50% {
+        transform: rotate(15deg);
+      }
+    }
+
+    .wind-arrow.animating {
+      animation: wind-sway 1.2s ease-in-out infinite;
+    }
+
+    .wind-label {
+      font-size: 0.6rem;
+      font-family: 'Fredoka One', cursive;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+      transition: color 0.4s;
+    }
+
+    /* Strength bar */
+    .wind-bar-wrap {
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    .wind-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.6s ease, background 0.5s ease;
+      background: var(--primary);
+    }
+
+    /* Team wind preview badge */
+    .team-wind-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-none {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .badge-light {
+      background: rgba(255, 200, 50, 0.15);
+      color: #ffc832;
+      border: 1px solid rgba(255, 200, 50, 0.3);
+    }
+
+    .badge-heavy {
+      background: rgba(255, 80, 80, 0.15);
+      color: #ff6060;
+      border: 1px solid rgba(255, 80, 80, 0.3);
+    }
+
+    /* Pre-game wind preview panel inside team overlay */
+    .wind-preview-box {
+      margin-top: 18px;
+      padding: 14px 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .wind-preview-box .wpb-icon {
+      font-size: 2rem;
+    }
+
+    .wind-preview-box .wpb-info {
+      flex: 1;
+    }
+
+    .wind-preview-box .wpb-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .wind-preview-box .wpb-desc {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .wind-alert {
+      display: block;
+      margin-top: 6px;
+      color: var(--primary);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+      padding: 4px 8px;
+      background: rgba(245, 166, 35, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(245, 166, 35, 0.2);
+    }
+
+    .wpb-demo-arrow {
+      font-size: 2.2rem;
+      color: var(--primary);
+      animation: wind-sway 1.4s ease-in-out infinite;
+    }
+
     .back-link {
       position: fixed;
-      top: 14px;
-      left: 18px;
-      z-index: 100;
+      top: 15px;
+      left: 15px;
+      z-index: 200;
       color: var(--muted);
-      font-size: .75rem;
+      font-size: 0.8rem;
       text-decoration: none;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,.08);
-      padding: 6px 14px;
-      border-radius: 50px;
-      transition: color .2s, border-color .2s;
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .back-link:hover { color: var(--text); border-color: rgba(245,166,35,.4); }
-
-    /* ── Instructions ── */
     .instructions {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      gap: 24px;
-      margin-top: 8px;
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      padding: 8px 20px;
       color: var(--muted);
-      font-size: .72rem;
-      letter-spacing: 1px;
+      font-size: 0.65rem;
       text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(15, 12, 29, 0.75);
+      backdrop-filter: blur(6px);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+      pointer-events: none;
     }
-
-    .instructions span { display: flex; align-items: center; gap: 6px; }
-    .instructions em   { color: var(--text); font-style: normal; }
   </style>
 </head>
-<body>
-  <a href="index.html" class="back-link">← Back</a>
+
+<body class="theme-solar">
+  <div class="bg-gradient"></div>
+  <a href="index.html" class="back-link">← HOME</a>
 
   <header>
-    <h1>🥔 Chip Bowl Blitz</h1>
-    <p>Flick chips into the bowl · Score big</p>
+    <h1>CHIP BOWL BLITZ</h1>
+    <p style="font-size:0.6rem; color: var(--muted); letter-spacing: 2px; margin-top: 2px; font-weight: 800;">PRO
+      EDITION</p>
   </header>
 
   <div class="hud">
-    <div class="hud-card"><div class="label">Score</div><div class="value" id="score-val">0</div></div>
-    <div class="hud-card"><div class="label">Chips</div><div class="value" id="chips-val">10</div></div>
-    <div class="hud-card"><div class="label">Streak</div><div class="value" id="streak-val">0</div></div>
+    <div class="player-badge" id="player-badge">
+      <div class="p-avatar" id="player-avatar">?</div>
+      <div class="p-name" id="player-name-disp">PLAYER</div>
+    </div>
+    <div class="hud-card">
+      <div class="label">Score</div>
+      <div class="value" id="score-val">0</div>
+    </div>
+    <div class="hud-card">
+      <div class="label">Level</div>
+      <div class="value" id="difficulty-val">1</div>
+    </div>
+    <div class="hud-card">
+      <div class="label">Chips</div>
+      <div class="value" id="chips-val">10</div>
+    </div>
+  </div>
+
+  <!-- Wind indicator – fixed top-right above the canvas -->
+  <div class="wind-meter calm" id="wind-meter-box">
+    <div class="wind-header">💨 Wind</div>
+    <div class="wind-arrow animating" id="wind-arrow">→</div>
+    <div class="wind-label" id="wind-text">CALM</div>
+    <div class="wind-bar-wrap">
+      <div class="wind-bar-fill" id="wind-bar"></div>
+    </div>
   </div>
 
   <div class="canvas-wrap" id="wrap">
     <canvas id="gameCanvas"></canvas>
-    <!-- Start overlay -->
-    <div class="overlay" id="start-overlay">
-      <h2>Chip Bowl Blitz</h2>
-      <p>Click &amp; drag on a chip to aim, release to launch it into the bowl!</p>
-      <button class="btn" id="start-btn">Let's Snack! 🥔</button>
+
+    <!-- Team Selection Overlay -->
+    <div class="overlay" id="team-overlay">
+      <h2
+        style="font-family:'Fredoka One'; font-size: clamp(1.6rem,4vw,2.4rem); background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 2px;">
+        CHOOSE YOUR FLAVOR</h2>
+      <p style="color: var(--muted); font-size: 0.75rem; margin-bottom: 12px; letter-spacing: 1px;">SELECT A TEAM ·
+        ENTER YOUR NAME · PLAY</p>
+
+      <!-- Player Name Input -->
+      <div class="name-input-wrap">
+        <div class="name-input-label">Your Snacker Name</div>
+        <input class="name-input" id="player-name-input" type="text" maxlength="18" placeholder="e.g. CrispyKing"
+          autocomplete="off" />
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card selected" data-theme="solar">
+          <div class="team-icon">🔥</div>
+          <div class="team-name">SOLAR FLARE</div>
+          <div class="team-bonus">Lower Gravity + Fast</div>
+          <span class="team-wind-badge badge-heavy">💨 Strong Wind</span>
+        </div>
+        <div class="team-card" data-theme="glacier">
+          <div class="team-icon">❄️</div>
+          <div class="team-name">GLACIER GUARD</div>
+          <div class="team-bonus">High Friction + Stable</div>
+          <span class="team-wind-badge badge-light">🌬️ Light Wind</span>
+        </div>
+        <div class="team-card" data-theme="shadow">
+          <div class="team-icon">👻</div>
+          <div class="team-name">SHADOW STRIKE</div>
+          <div class="team-bonus">Stealth Shot + 2x Pts</div>
+          <span class="team-wind-badge badge-heavy">💨 Variable Wind</span>
+        </div>
+        <div class="team-card" data-theme="forest">
+          <div class="team-icon">🍃</div>
+          <div class="team-name">FOREST FURY</div>
+          <div class="team-bonus">Wind Immunity!</div>
+          <span class="team-wind-badge badge-none">🛡️ No Wind</span>
+        </div>
+      </div>
+
+      <!-- Wind preview section -->
+      <div class="wind-preview-box" id="wind-preview-box">
+        <div class="wpb-icon">🌪️</div>
+        <div class="wpb-info">
+          <div class="wpb-title" id="wpb-title">Moderate Wind Expected</div>
+          <div class="wpb-desc" id="wpb-desc">Wind shifts every shot. Watch the indicator — it affects your chip
+            mid-flight! <span class="wind-alert">Keep an eye on the right wind indication.</span></div>
+        </div>
+        <div class="wpb-demo-arrow" id="wpb-demo-arrow">→</div>
+      </div>
+
+      <button class="btn" id="start-game-btn" style="margin-top: 18px;">🥔 START MATCH</button>
     </div>
-    <!-- Game-over overlay (hidden) -->
-    <div class="overlay" id="gameover-overlay" style="display:none;">
-      <h2 id="go-title">Game Over!</h2>
-      <p id="go-score">You scored <strong>0</strong> pts with <strong>0</strong> goals!</p>
-      <button class="btn" id="restart-btn">Play Again 🔄</button>
+
+    <!-- Game Over -->
+    <div class="overlay hidden" id="gameover-overlay" style="gap: 0;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🏆</div>
+      <h2 id="go-title"
+        style="font-family:'Fredoka One'; font-size: clamp(2rem,5vw,3rem); background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">
+        CRUNCH TIME!</h2>
+      <p id="go-player"
+        style="margin: 10px 0 4px; font-family:'Fredoka One'; font-size: 1.1rem; color: var(--primary);">PLAYER</p>
+      <p id="go-score" style="margin-bottom: 20px; color: var(--muted); font-size: 0.9rem;">You earned <strong
+          style="color:var(--text)">0</strong> points!</p>
+      <div style="display:flex; gap:16px; margin-bottom: 20px;">
+        <div
+          style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 20px; text-align:center;">
+          <div style="font-size:0.55rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase;">Final Score
+          </div>
+          <div style="font-family:'Fredoka One'; font-size:1.8rem; color:var(--primary);" id="go-final-score">0</div>
+        </div>
+        <div
+          style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 20px; text-align:center;">
+          <div style="font-size:0.55rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase;">Goals</div>
+          <div style="font-family:'Fredoka One'; font-size:1.8rem; color:#39ff14;" id="go-goals">0</div>
+        </div>
+        <div
+          style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 20px; text-align:center;">
+          <div style="font-size:0.55rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase;">Best Lvl
+          </div>
+          <div style="font-family:'Fredoka One'; font-size:1.8rem; color:var(--secondary);" id="go-level">1</div>
+        </div>
+      </div>
+      <button class="btn" id="restart-btn">🔄 PLAY AGAIN</button>
     </div>
   </div>
 
   <div class="instructions">
-    <span>🎯 <em>Drag</em> to aim</span>
-    <span>🚀 <em>Release</em> to launch</span>
-    <span>🥗 <em>Land in the bowl</em></span>
+    <b>BANK SHOTS:</b> BOUNCE OFF SIDES FOR 2X POINTS · <b>WIND:</b> WATCH THE ARROW · <b>BOWL:</b> IT WILL START
+    MOVING!
   </div>
 
   <script>
-  (() => {
-    // ── Canvas setup ──────────────────────────────────────────────────────────
-    const canvas  = document.getElementById('gameCanvas');
-    const ctx     = canvas.getContext('2d');
-    const wrap    = document.getElementById('wrap');
+    (() => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      const teamCards = document.querySelectorAll('.team-card');
+      const startBtn = document.getElementById('start-game-btn');
+      const teamOverlay = document.getElementById('team-overlay');
+      const windArrow = document.getElementById('wind-arrow');
+      const windText = document.getElementById('wind-text');
+      const nameInput = document.getElementById('player-name-input');
 
-    function resize() {
-      const vw = Math.min(window.innerWidth - 32, 780);
-      const vh = Math.min(window.innerHeight - 220, 520);
-      canvas.width  = vw;
-      canvas.height = vh;
-    }
-    resize();
-    window.addEventListener('resize', () => { resize(); resetPositions(); });
+      // Game Settings
+      const GRAVITY_DEFAULT = 0.4;
+      const FRICTION_DEFAULT = 0.98;
+      const CHIP_RADIUS = 20;
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    const TOTAL_CHIPS   = 10;
-    const GRAVITY       = 0.38;
-    const FRICTION      = 0.98;
-    const BOUNCE        = 0.35;
+      // State
+      let currentTheme = 'solar';
+      let playerName = 'PLAYER';
+      let score = 0;
+      let goals = 0;
+      let chipsLeft = 10;
+      let difficulty = 1;
+      let maxDifficulty = 1;
+      let gameActive = false;
+      let flying = false;
+      let dragging = false;
 
-    let score = 0, chipsLeft = TOTAL_CHIPS, streak = 0, goals = 0;
-    let gameActive = false;
-    let animId;
+      let dragStart = { x: 0, y: 0 };
+      let dragCurrent = { x: 0, y: 0 };
 
-    // Chip state
-    const chipRadius = 22;
-    let chip = {};
-    // Drag state
-    let dragging = false, dragStart = {x:0,y:0}, dragCurrent = {x:0,y:0};
-    // Flying chip
-    let flying = false, vx = 0, vy = 0, cx = 0, cy = 0;
-    let chipAngle = 0, chipSpin = 0;
-    // Particles
-    let particles = [];
-    // Floating texts
-    let floatingTexts = [];
+      let cx = 0, cy = 0; // Flight position
+      let vx = 0, vy = 0; // Velocity
+      let chipAngle = 0;
+      let chipSpin = 0;
 
-    // Bowl
-    let bowl = {};
+      let wind = 0;
+      let particles = [];
+      let floatingTexts = [];
 
-    function resetPositions() {
-      chip = {
-        x: canvas.width * 0.14,
-        y: canvas.height * 0.72,
+      // Dynamic Elements
+      let bowl = {
+        x: 0, y: 0,
+        rx: 50, ry: 15,
+        vx: 0,
+        moving: false,
+        dir: 1
       };
-      bowl = {
-        x: canvas.width * 0.78,
-        y: canvas.height * 0.68,
-        rx: 52, // half-width of bowl opening
-        ry: 18, // bowl ellipse y-radius
-        depth: 40,
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initPositions();
+      }
+
+      function initPositions() {
+        bowl.x = canvas.width * 0.8;
+        bowl.y = canvas.height * 0.8;
+        bowl.rx = 60;
+        if (gameActive) resetChip();
+      }
+
+      function updateHUD() {
+        document.getElementById('score-val').textContent = score;
+        document.getElementById('chips-val').textContent = chipsLeft;
+        document.getElementById('difficulty-val').textContent = Math.floor(difficulty);
+        // Player badge
+        const initials = playerName.slice(0, 2).toUpperCase();
+        document.getElementById('player-avatar').textContent = initials;
+        document.getElementById('player-name-disp').textContent = playerName.toUpperCase();
+      }
+
+      // Theme Handling
+      teamCards.forEach(card => {
+        card.addEventListener('click', () => {
+          teamCards.forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          currentTheme = card.dataset.theme;
+          document.body.className = 'theme-' + currentTheme;
+          updateWindPreview(currentTheme);
+        });
+      });
+
+      function applyPhysics() {
+        const gravMap = { solar: 0.28, glacier: 0.45, shadow: 0.4, forest: 0.38 };
+        const frictionMap = { solar: 0.99, glacier: 0.95, shadow: 0.98, forest: 0.98 };
+
+        return {
+          gravity: gravMap[currentTheme] || GRAVITY_DEFAULT,
+          friction: frictionMap[currentTheme] || FRICTION_DEFAULT
+        };
+      }
+
+      // Wind preview data per team
+      const WIND_PREVIEW = {
+        solar: { title: '🔥 Strong, Gusting Wind', desc: 'Solar Flare cuts through heat waves — expect strong, unpredictable gusts every shot! <span class="wind-alert">Keep an eye on the right wind indication.</span>', cls: 'heavy', arrow: '💨' },
+        glacier: { title: '❄️ Light, Steady Breeze', desc: 'Glacier Guard glides on stable cold air — wind is mild and manageable. <span class="wind-alert">Keep an eye on the right wind indication.</span>', cls: 'light', arrow: '🌬️' },
+        shadow: { title: '👻 Chaotic Wind', desc: 'Shadow Strike thrives in chaos — wind can swing hard in either direction, stay sharp! <span class="wind-alert">Keep an eye on the right wind indication.</span>', cls: 'heavy', arrow: '🌀' },
+        forest: { title: '🛡️ WIND IMMUNITY', desc: 'Forest Fury channels nature — you are completely protected from wind forces!', cls: 'shield', arrow: '🍃' },
       };
-    }
-    resetPositions();
 
-    // ── HUD update ────────────────────────────────────────────────────────────
-    function updateHUD() {
-      document.getElementById('score-val').textContent  = score;
-      document.getElementById('chips-val').textContent  = chipsLeft;
-      document.getElementById('streak-val').textContent = streak;
-    }
-    updateHUD();
+      // Update wind preview panel when team is selected
+      function updateWindPreview(theme) {
+        const wp = WIND_PREVIEW[theme];
+        document.getElementById('wpb-title').textContent = wp.title;
+        document.getElementById('wpb-desc').innerHTML = wp.desc;
+        document.getElementById('wpb-demo-arrow').textContent = wp.arrow;
+        const box = document.getElementById('wind-preview-box');
+        box.style.borderColor = wp.cls === 'heavy' ? 'rgba(255,80,80,0.3)' : wp.cls === 'light' ? 'rgba(255,200,50,0.3)' : wp.cls === 'shield' ? 'rgba(46,204,113,0.3)' : 'rgba(255,255,255,0.1)';
+      }
+      updateWindPreview('solar');
 
-    // ── Drawing helpers ───────────────────────────────────────────────────────
+      function setWindUI(windVal, isImmune) {
+        const meter = document.getElementById('wind-meter-box');
+        const bar = document.getElementById('wind-bar');
+        const arr = document.getElementById('wind-arrow');
+        const lbl = document.getElementById('wind-text');
 
-    // Realistic chip (ridged wafer shape)
-    function drawChip(x, y, angle, alpha = 1) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.translate(x, y);
-      ctx.rotate(angle);
+        if (isImmune) {
+          meter.className = 'wind-meter shield';
+          bar.style.width = '0%';
+          bar.style.background = '#2ecc71';
+          arr.style.transform = 'rotate(0deg)';
+          arr.classList.remove('animating');
+          lbl.textContent = 'IMMUNE';
+          lbl.style.color = '#2ecc71';
+          return;
+        }
 
-      // Shadow
-      ctx.shadowColor  = 'rgba(0,0,0,.5)';
-      ctx.shadowBlur   = 8;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 3;
+        const strength = Math.abs(windVal);          // 0 – ~0.2
+        const pct = Math.min(strength / 0.18 * 100, 100);
+        const deg = windVal > 0 ? 0 : 180;     // → east or ← west
 
-      // Main chip body – golden wafer ellipse
-      const grd = ctx.createRadialGradient(-6,-6,2, 0,0, chipRadius);
-      grd.addColorStop(0,   '#ffe08a');
-      grd.addColorStop(0.4, '#f5a623');
-      grd.addColorStop(0.75,'#d4841a');
-      grd.addColorStop(1,   '#a85a00');
-      ctx.beginPath();
-      ctx.ellipse(0, 0, chipRadius, chipRadius * 0.6, 0, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
+        arr.style.transform = `rotate(${deg}deg)`;
+        arr.classList.remove('animating');
 
-      // Ridges (curved lines across chip)
-      ctx.shadowColor = 'transparent';
-      ctx.lineWidth = 1.2;
-      ctx.strokeStyle = 'rgba(0,0,0,.18)';
-      for (let i = -3; i <= 3; i++) {
-        const xOff = i * 6;
+        if (strength < 0.03) {
+          meter.className = 'wind-meter calm';
+          bar.style.width = '8%';
+          bar.style.background = '#39ff14';
+          lbl.textContent = 'CALM';
+          lbl.style.color = '#39ff14';
+        } else if (strength < 0.09) {
+          meter.className = 'wind-meter light';
+          bar.style.width = pct + '%';
+          bar.style.background = '#ffc832';
+          lbl.textContent = windVal > 0 ? 'EAST ➡' : '⬅ WEST';
+          lbl.style.color = '#ffc832';
+        } else {
+          meter.className = 'wind-meter heavy';
+          bar.style.width = pct + '%';
+          bar.style.background = '#ff6060';
+          lbl.textContent = windVal > 0 ? 'GUST ➡' : '⬅ GUST';
+          lbl.style.color = '#ff6060';
+        }
+      }
+
+      function setWind() {
+        if (currentTheme === 'forest') {
+          wind = 0;
+          setWindUI(0, true);
+        } else {
+          const maxWind = currentTheme === 'solar' ? 0.3 : currentTheme === 'shadow' ? 0.28 : 0.15;
+          wind = (Math.random() - 0.5) * difficulty * maxWind;
+          setWindUI(wind, false);
+        }
+      }
+
+      // Theme color helpers
+      const THEME_COLORS = {
+        solar: { chip: '#ff9d00', chipEdge: '#ff5e00', bg1: '#1d0c0c', bg2: '#2d1210', ground: 'rgba(255,94,0,0.25)', bowlBody: '#3d1a0a', bowlRim: '#ff5e00' },
+        glacier: { chip: '#a5f3ff', chipEdge: '#00d2ff', bg1: '#0c161d', bg2: '#0d2030', ground: 'rgba(0,210,255,0.2)', bowlBody: '#0a2535', bowlRim: '#00d2ff' },
+        shadow: { chip: '#9b59b6', chipEdge: '#a300ff', bg1: '#0d0c1d', bg2: '#160d28', ground: 'rgba(163,0,255,0.2)', bowlBody: '#1a0a30', bowlRim: '#a300ff' },
+        forest: { chip: '#f1c40f', chipEdge: '#2ecc71', bg1: '#0c1d13', bg2: '#0f2918', ground: 'rgba(46,204,113,0.2)', bowlBody: '#0a2010', bowlRim: '#2ecc71' },
+      };
+      function tc() { return THEME_COLORS[currentTheme] || THEME_COLORS.solar; }
+
+      // --- DRAWING ---
+      function drawBackground() {
+        const c = tc();
+        const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        sky.addColorStop(0, c.bg1);
+        sky.addColorStop(1, c.bg2);
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Ambient glow behind bowl
+        const glow = ctx.createRadialGradient(bowl.x, bowl.y - 40, 0, bowl.x, bowl.y, 180);
+        glow.addColorStop(0, c.ground.replace('0.2', '0.1'));
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.fillRect(bowl.x - 200, bowl.y - 200, 400, 400);
+
+        // Ground line
+        const gy = canvas.height * 0.9;
+        const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+        grad.addColorStop(0, c.ground);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, gy, canvas.width, canvas.height - gy);
         ctx.beginPath();
-        ctx.moveTo(xOff, -chipRadius * 0.55);
-        ctx.bezierCurveTo(xOff + 3, 0, xOff + 3, 0, xOff, chipRadius * 0.55);
+        ctx.moveTo(0, gy);
+        ctx.lineTo(canvas.width, gy);
+        ctx.strokeStyle = c.ground;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
       }
 
-      // Salt specks
-      ctx.shadowColor = 'transparent';
-      const specks = [[4,-4],[-6,2],[8,6],[-3,-8],[1,9],[-9,-2],[7,-9]];
-      for (const [sx, sy] of specks) {
-        ctx.beginPath();
-        ctx.arc(sx, sy, 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,.55)';
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
-
-    // Snack bowl
-    function drawBowl() {
-      const {x, y, rx, ry, depth} = bowl;
-      ctx.save();
-
-      // Bowl outer shadow
-      ctx.shadowColor  = 'rgba(0,0,0,.5)';
-      ctx.shadowBlur   = 16;
-      ctx.shadowOffsetY = 6;
-
-      // Bowl body (trapezoid→ ellipse combo)
-      ctx.beginPath();
-      ctx.moveTo(x - rx, y);
-      ctx.bezierCurveTo(x - rx - 8, y + depth * 0.5, x - rx * 0.3, y + depth * 1.1, x, y + depth);
-      ctx.bezierCurveTo(x + rx * 0.3, y + depth * 1.1, x + rx + 8, y + depth * 0.5, x + rx, y);
-      ctx.closePath();
-      const bodyGrd = ctx.createLinearGradient(x - rx, y, x + rx, y + depth);
-      bodyGrd.addColorStop(0,   '#2c2060');
-      bodyGrd.addColorStop(0.5, '#3d2e8c');
-      bodyGrd.addColorStop(1,   '#1a1445');
-      ctx.fillStyle = bodyGrd;
-      ctx.fill();
-
-      ctx.shadowColor = 'transparent';
-
-      // Bowl rim (top ellipse)
-      ctx.beginPath();
-      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
-      const rimGrd = ctx.createLinearGradient(x - rx, y - ry, x + rx, y + ry);
-      rimGrd.addColorStop(0,   '#7c6fff');
-      rimGrd.addColorStop(0.5, '#5045c0');
-      rimGrd.addColorStop(1,   '#3a30a0');
-      ctx.fillStyle = rimGrd;
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(180,170,255,.5)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Rim highlight
-      ctx.beginPath();
-      ctx.ellipse(x, y - 3, rx * 0.65, ry * 0.5, 0, 0, Math.PI);
-      ctx.strokeStyle = 'rgba(255,255,255,.25)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Chips already in bowl (decorative)
-      for (let i = 0; i < Math.min(goals, 5); i++) {
-        const bx = x + (i - 2) * 14;
-        const by = y + 8 + i * 3;
+      function drawChip(x, y, angle) {
+        const c = tc();
         ctx.save();
-        ctx.rotate(i * 0.4);
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetY = 4;
+
+        // Main body
+        const grd = ctx.createRadialGradient(-4, -4, 2, 0, 0, CHIP_RADIUS);
+        grd.addColorStop(0, c.chip);
+        grd.addColorStop(0.6, c.chipEdge);
+        grd.addColorStop(1, c.bowlBody);
         ctx.beginPath();
-        ctx.ellipse(bx, by, 12, 7, i * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(38, 90%, ${55 + i * 4}%, 0.85)`;
+        ctx.ellipse(0, 0, CHIP_RADIUS, CHIP_RADIUS * 0.65, 0, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
         ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+        // Ridge lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 1.2;
+        for (let i = -2; i <= 2; i++) {
+          ctx.beginPath();
+          ctx.moveTo(i * 6, -CHIP_RADIUS * 0.55);
+          ctx.bezierCurveTo(i * 6 + 3, 0, i * 6 + 3, 0, i * 6, CHIP_RADIUS * 0.55);
+          ctx.stroke();
+        }
+        // Highlight gleam
+        ctx.beginPath();
+        ctx.ellipse(-4, -5, CHIP_RADIUS * 0.4, CHIP_RADIUS * 0.2, -0.4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.18)';
+        ctx.fill();
+
         ctx.restore();
       }
 
-      ctx.restore();
-    }
-
-    // Aim arrow
-    function drawAimArrow() {
-      if (!dragging) return;
-      const dx = dragStart.x - dragCurrent.x;
-      const dy = dragStart.y - dragCurrent.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 10) return;
-
-      const power = Math.min(dist / 120, 1);
-      const endX  = chip.x + dx * 2.2;
-      const endY  = chip.y + dy * 2.2;
-
-      // Dashed trajectory preview (parabolic dots)
-      const simVx = dx * 0.14;
-      const simVy = dy * 0.14;
-      ctx.save();
-      for (let t = 0; t < 18; t++) {
-        const tt = t * 3;
-        const px = chip.x + simVx * tt;
-        const py = chip.y + simVy * tt + 0.5 * GRAVITY * tt * tt;
-        const a  = 1 - t / 18;
-        ctx.globalAlpha = a * 0.65;
-        ctx.beginPath();
-        ctx.arc(px, py, 3 - t * 0.1, 0, Math.PI * 2);
-        ctx.fillStyle = `hsl(38, 90%, ${70 + t * 1.5}%)`;
-        ctx.fill();
-      }
-      ctx.restore();
-
-      // Power bar (arc around chip)
-      ctx.save();
-      ctx.globalAlpha = .85;
-      ctx.strokeStyle = `hsl(${120 - power * 120}, 90%, 55%)`;
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.arc(chip.x, chip.y, chipRadius + 8, -Math.PI / 2, -Math.PI / 2 + power * Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // Ground line
-    function drawGround() {
-      const gy = canvas.height * 0.88;
-      const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
-      grad.addColorStop(0,   'rgba(245,166,35,.18)');
-      grad.addColorStop(0.4, 'rgba(245,166,35,.04)');
-      grad.addColorStop(1,   'transparent');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, gy, canvas.width, canvas.height - gy);
-
-      ctx.beginPath();
-      ctx.moveTo(0, gy);
-      ctx.lineTo(canvas.width, gy);
-      ctx.strokeStyle = 'rgba(245,166,35,.3)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
-
-    // Particles
-    function spawnParticles(x, y, type = 'goal') {
-      const colors = type === 'goal'
-        ? ['#f5a623','#ffe08a','#39ff14','#e84393','#fff']
-        : ['#a0a0a0','#888','#ccc'];
-      for (let i = 0; i < (type === 'goal' ? 40 : 12); i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const spd   = Math.random() * (type === 'goal' ? 7 : 3) + 1;
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * spd,
-          vy: Math.sin(angle) * spd - (type === 'goal' ? 3 : 1),
-          radius: Math.random() * (type === 'goal' ? 5 : 3) + 1.5,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          life: 1,
-          decay: Math.random() * 0.025 + 0.015,
-          gravity: 0.18,
-          isChip: type === 'goal' && Math.random() > 0.7,
-          angle: Math.random() * Math.PI * 2,
-          spin: (Math.random() - 0.5) * 0.2,
-        });
-      }
-    }
-
-    function updateParticles() {
-      particles = particles.filter(p => p.life > 0);
-      for (const p of particles) {
-        p.x  += p.vx;
-        p.y  += p.vy;
-        p.vy += p.gravity;
-        p.vx *= 0.97;
-        p.life -= p.decay;
-        p.angle += p.spin;
-      }
-    }
-
-    function drawParticles() {
-      for (const p of particles) {
+      function drawBowl() {
+        const c = tc();
         ctx.save();
-        ctx.globalAlpha = p.life;
-        if (p.isChip) {
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.angle);
+
+        // Bowl shadow
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 18;
+        ctx.shadowOffsetY = 6;
+
+        // Bowl body
+        const depth = 50;
+        ctx.beginPath();
+        ctx.moveTo(bowl.x - bowl.rx, bowl.y);
+        ctx.bezierCurveTo(bowl.x - bowl.rx - 8, bowl.y + depth * 0.5, bowl.x - bowl.rx * 0.35, bowl.y + depth * 1.1, bowl.x, bowl.y + depth);
+        ctx.bezierCurveTo(bowl.x + bowl.rx * 0.35, bowl.y + depth * 1.1, bowl.x + bowl.rx + 8, bowl.y + depth * 0.5, bowl.x + bowl.rx, bowl.y);
+        ctx.closePath();
+        const bodyGrd = ctx.createLinearGradient(bowl.x - bowl.rx, bowl.y, bowl.x, bowl.y + depth);
+        bodyGrd.addColorStop(0, c.bowlBody);
+        bodyGrd.addColorStop(1, 'rgba(0,0,0,0.6)');
+        ctx.fillStyle = bodyGrd;
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+
+        // Rim ellipse
+        ctx.beginPath();
+        ctx.ellipse(bowl.x, bowl.y, bowl.rx, bowl.ry, 0, 0, Math.PI * 2);
+        const rimGrd = ctx.createLinearGradient(bowl.x - bowl.rx, bowl.y - bowl.ry, bowl.x + bowl.rx, bowl.y + bowl.ry);
+        rimGrd.addColorStop(0, c.bowlRim);
+        rimGrd.addColorStop(1, c.bowlBody);
+        ctx.fillStyle = rimGrd;
+        ctx.fill();
+        ctx.strokeStyle = c.bowlRim;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Rim highlight
+        ctx.beginPath();
+        ctx.ellipse(bowl.x, bowl.y - 3, bowl.rx * 0.6, bowl.ry * 0.45, 0, 0, Math.PI);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      function chipX() { return canvas.width * 0.15; }
+      function chipY() { return canvas.height * 0.75; }
+
+      function drawAim() {
+        if (!dragging) return;
+        const dx = dragStart.x - dragCurrent.x;
+        const dy = dragStart.y - dragCurrent.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 8) return;
+
+        const physics = applyPhysics();
+        const simVx = dx * 0.15;
+        const simVy = dy * 0.15;
+
+        // Parabolic dot preview (accounts for gravity)
+        ctx.save();
+        for (let t = 0; t < 22; t++) {
+          const tt = t * 3;
+          const px = chipX() + simVx * tt;
+          const py = chipY() + simVy * tt + 0.5 * physics.gravity * tt * tt;
+          const a = (1 - t / 22) * 0.7;
+          ctx.globalAlpha = a;
           ctx.beginPath();
-          ctx.ellipse(0, 0, p.radius * 2, p.radius * 1.2, 0, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
+          ctx.arc(px, py, Math.max(1, 4 - t * 0.15), 0, Math.PI * 2);
+          ctx.fillStyle = tc().bowlRim;
           ctx.fill();
+        }
+
+        // Power ring around chip
+        const power = Math.min(dist / 150, 1);
+        ctx.globalAlpha = 0.9;
+        ctx.strokeStyle = `hsl(${120 - power * 120}, 90%, 55%)`;
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(chipX(), chipY(), CHIP_RADIUS + 10, -Math.PI / 2, -Math.PI / 2 + power * Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // --- LOGIC ---
+      function update() {
+        if (!gameActive) return;
+
+        // Bowl movement
+        if (difficulty > 3) {
+          bowl.moving = true;
+          const range = 100 * (difficulty / 5);
+          const baseX = canvas.width * 0.8;
+          bowl.vx = 2 * (difficulty / 4) * bowl.dir;
+          bowl.x += bowl.vx;
+
+          if (bowl.x > baseX + range) bowl.dir = -1;
+          if (bowl.x < baseX - range) bowl.dir = 1;
+        }
+
+        if (flying) {
+          const physics = applyPhysics();
+          vx *= physics.friction;
+          vx += wind;
+          vy += physics.gravity;
+          cx += vx;
+          cy += vy;
+          chipAngle += chipSpin;
+
+          // Ceiling/Wall Bounce
+          if (cx < 0 || cx > canvas.width) {
+            vx *= -0.7;
+            score += 10; // Bounce bonus
+            spawnText(cx, cy, "BANK!", "var(--green)");
+          }
+
+          // Bowl Collision
+          if (vy > 0 && Math.abs(cy - bowl.y) < 10) {
+            const distToBowl = Math.hypot(cx - bowl.x, cy - bowl.y);
+            if (distToBowl < bowl.rx) {
+              land(true);
+              return;
+            }
+          }
+
+          // Ground Collision
+          if (cy > canvas.height * 0.9) {
+            land(false);
+          }
+        }
+      }
+
+      function land(success) {
+        flying = false;
+        if (success) {
+          goals++;
+          const multi = currentTheme === 'shadow' ? 2 : 1;
+          const pts = (100 * multi) + (difficulty * 20);
+          score += pts;
+          difficulty += 0.5;
+          if (difficulty > maxDifficulty) maxDifficulty = difficulty;
+          spawnText(cx, cy, `+${pts}`, "var(--primary)");
+          bowl.rx = Math.max(25, bowl.rx - 1);
         } else {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
+          difficulty = Math.max(1, difficulty - 0.2);
+          spawnText(cx, cy, "MISS", "var(--secondary)");
         }
-        ctx.restore();
-      }
-    }
 
-    // Floating score texts
-    function spawnText(x, y, text, color = '#f5a623') {
-      floatingTexts.push({ x, y, text, color, life: 1, vy: -1.5 });
-    }
+        chipsLeft--;
+        updateHUD();
 
-    function updateFloatingTexts() {
-      floatingTexts = floatingTexts.filter(t => t.life > 0);
-      for (const t of floatingTexts) {
-        t.y  += t.vy;
-        t.life -= 0.018;
-      }
-    }
-
-    function drawFloatingTexts() {
-      for (const t of floatingTexts) {
-        ctx.save();
-        ctx.globalAlpha = t.life;
-        ctx.fillStyle   = t.color;
-        ctx.font        = `bold ${Math.round(28 * t.life + 12)}px 'Fredoka One', cursive`;
-        ctx.textAlign   = 'center';
-        ctx.shadowColor = 'rgba(0,0,0,.5)';
-        ctx.shadowBlur  = 6;
-        ctx.fillText(t.text, t.x, t.y);
-        ctx.restore();
-      }
-    }
-
-    // ── Collision / scoring ───────────────────────────────────────────────────
-    function checkBowl() {
-      // Hit if chip center is within the elliptical rim of the bowl
-      const dx = (cx - bowl.x) / bowl.rx;
-      const dy = (cy - bowl.y) / bowl.ry;
-      return dx * dx + dy * dy <= 1;
-    }
-
-    function checkGround() {
-      return cy + chipRadius >= canvas.height * 0.88;
-    }
-
-    function landChip(isGoal) {
-      flying = false;
-      if (isGoal) {
-        goals++;
-        streak++;
-        const bonusMult = streak >= 3 ? 2 : 1;
-        const pts = (100 + (streak - 1) * 25) * bonusMult;
-        score += pts;
-        spawnParticles(cx, cy, 'goal');
-        const msgs = ['PERFECT! 🎯','SWISH! 🍟','CRISPY! 🥔','SALTY WIN! 🧂','ON FIRE! 🔥'];
-        spawnText(cx, cy - 30, streak >= 3 ? `×${bonusMult} ${msgs[Math.min(streak-1,4)]}` : msgs[0], '#39ff14');
-        if (streak >= 3) spawnText(cx, cy - 60, `STREAK ×${streak}!`, '#e84393');
-      } else {
-        streak = 0;
-        spawnParticles(cx, cy, 'miss');
-        spawnText(cx, cy - 20, 'MISSED! 😭', 'var(--accent2)');
-      }
-
-      chipsLeft--;
-      updateHUD();
-
-      if (chipsLeft <= 0) {
-        setTimeout(showGameOver, 1400);
-      } else {
-        // Reset chip position after short delay
-        setTimeout(resetChip, 900);
-      }
-    }
-
-    function resetChip() {
-      chip = { x: canvas.width * 0.14, y: canvas.height * 0.72 };
-      flying = false;
-      dragging = false;
-      chipAngle = 0;
-      chipSpin  = 0;
-    }
-
-    // ── Game Over ─────────────────────────────────────────────────────────────
-    function showGameOver() {
-      gameActive = false;
-      cancelAnimationFrame(animId);
-      const ov = document.getElementById('gameover-overlay');
-      const title = document.getElementById('go-title');
-      const scoreEl = document.getElementById('go-score');
-      title.textContent = goals >= 7 ? '🏆 Chip Champion!' : goals >= 4 ? '😎 Nice Snacking!' : '😅 Keep Practicing!';
-      scoreEl.innerHTML = `You scored <strong>${score}</strong> pts with <strong>${goals}</strong> goals out of ${TOTAL_CHIPS} chips!`;
-      ov.style.display = 'flex';
-      // Draw final frame
-      draw();
-    }
-
-    // ── Game loop ─────────────────────────────────────────────────────────────
-    function update() {
-      if (!flying) return;
-
-      cx += vx;
-      cy += vy;
-      vy += GRAVITY;
-      vx *= FRICTION;
-      chipAngle += chipSpin;
-
-      // Wall bounce
-      if (cx - chipRadius < 0) {
-        cx = chipRadius; vx = Math.abs(vx) * BOUNCE;
-        chipSpin *= -0.5;
-      }
-      if (cx + chipRadius > canvas.width) {
-        cx = canvas.width - chipRadius; vx = -Math.abs(vx) * BOUNCE;
-        chipSpin *= -0.5;
-      }
-
-      // Bowl check (when falling downward and chip is near bowl height)
-      if (vy > 0 && cy + chipRadius >= bowl.y - bowl.ry * 0.5 && cy - chipRadius < bowl.y + bowl.depth) {
-        if (checkBowl()) {
-          landChip(true);
-          return;
+        if (chipsLeft <= 0) {
+          gameActive = false;
+          const goTitle = document.getElementById('go-title');
+          const goPlayer = document.getElementById('go-player');
+          goTitle.textContent = goals >= 8 ? '🏆 CHIP CHAMPION!' : goals >= 5 ? '😎 SOLID SNACKING!' : '😅 KEEP PRACTICING!';
+          goPlayer.textContent = playerName.toUpperCase();
+          document.getElementById('go-final-score').textContent = score;
+          document.getElementById('go-goals').textContent = goals;
+          document.getElementById('go-level').textContent = Math.floor(maxDifficulty);
+          document.getElementById('gameover-overlay').classList.remove('hidden');
+        } else {
+          setTimeout(resetChip, 1000);
         }
       }
 
-      // Ground check
-      if (checkGround()) {
-        cy = canvas.height * 0.88 - chipRadius;
-        vy = -vy * BOUNCE;
-        vx *= 0.6;
-        chipSpin *= 0.5;
-        if (Math.abs(vy) < 1.2) {
-          landChip(false);
-        }
+      function resetChip() {
+        cx = chipX();
+        cy = chipY();
+        vx = 0; vy = 0;
+        chipAngle = 0;
+        chipSpin = 0;
+        flying = false;
+        dragging = false;
+        setWind();
       }
 
-      // Off screen (right side past bowl – count as miss)
-      if (cx > canvas.width + 60 || cy > canvas.height + 60) {
-        landChip(false);
+      function spawnText(x, y, text, color) {
+        floatingTexts.push({ x, y, text, color, life: 1 });
       }
-    }
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Sky gradient
-      const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      sky.addColorStop(0,   '#0f0c1d');
-      sky.addColorStop(0.7, '#1a1730');
-      sky.addColorStop(1,   '#150f2a');
-      ctx.fillStyle = sky;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Soft glow behind bowl
-      const glow = ctx.createRadialGradient(bowl.x, bowl.y, 0, bowl.x, bowl.y, 110);
-      glow.addColorStop(0,   'rgba(112,90,255,.12)');
-      glow.addColorStop(1,   'transparent');
-      ctx.fillStyle = glow;
-      ctx.fillRect(bowl.x - 120, bowl.y - 120, 240, 240);
-
-      drawGround();
-      drawBowl();
-      drawAimArrow();
-
-      if (!flying) drawChip(chip.x, chip.y, chipAngle);
-      else         drawChip(cx, cy, chipAngle);
-
-      updateParticles();
-      drawParticles();
-      updateFloatingTexts();
-      drawFloatingTexts();
-
-      if (gameActive) {
+        drawBackground();
         update();
-        animId = requestAnimationFrame(draw);
+        drawBowl();
+        drawAim();
+
+        if (!flying && gameActive) {
+          drawChip(chipX(), chipY(), 0);
+        } else if (flying) {
+          drawChip(cx, cy, chipAngle);
+        }
+
+        // Floating texts
+        floatingTexts = floatingTexts.filter(t => t.life > 0);
+        floatingTexts.forEach(t => {
+          ctx.save();
+          ctx.fillStyle = t.color;
+          ctx.globalAlpha = t.life;
+          ctx.font = `bold ${Math.round(18 * t.life + 10)}px 'Fredoka One', cursive`;
+          ctx.textAlign = 'center';
+          ctx.shadowColor = 'rgba(0,0,0,0.6)';
+          ctx.shadowBlur = 6;
+          ctx.fillText(t.text, t.x, t.y);
+          t.y -= 1.5;
+          t.life -= 0.02;
+          ctx.restore();
+        });
+
+        requestAnimationFrame(gameLoop);
       }
-    }
 
-    // ── Input – mouse ─────────────────────────────────────────────────────────
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const touch = e.touches ? e.touches[0] : e;
-      return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
-    }
+      // Input
+      canvas.addEventListener('mousedown', (e) => {
+        if (!gameActive || flying) return;
+        const rect = canvas.getBoundingClientRect();
+        dragStart = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        dragging = true;
+      });
 
-    function isOnChip(pos) {
-      return Math.hypot(pos.x - chip.x, pos.y - chip.y) <= chipRadius + 12;
-    }
+      canvas.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        const rect = canvas.getBoundingClientRect();
+        dragCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      });
 
-    canvas.addEventListener('mousedown', e => {
-      if (!gameActive || flying) return;
-      const pos = getPos(e);
-      if (!isOnChip(pos)) return;
-      dragging = true;
-      dragStart   = { ...pos };
-      dragCurrent = { ...pos };
-    });
+      canvas.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        const dx = dragStart.x - dragCurrent.x;
+        const dy = dragStart.y - dragCurrent.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 8) return;
 
-    canvas.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      dragCurrent = getPos(e);
-    });
+        flying = true;
+        cx = chipX();
+        cy = chipY();
+        vx = dx * 0.15;
+        vy = dy * 0.15;
+        chipSpin = (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx) / 80, 0.3);
+      });
 
-    canvas.addEventListener('mouseup', e => {
-      if (!dragging) return;
-      dragging = false;
-      const dx = dragStart.x - dragCurrent.x;
-      const dy = dragStart.y - dragCurrent.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 8) return;
-      flying = true;
-      cx = chip.x; cy = chip.y;
-      const power = Math.min(dist / 100, 1.4);
-      vx = dx * 0.14 * power;
-      vy = dy * 0.14 * power;
-      chipSpin = (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx) / 80, 0.25);
-    });
+      startBtn.addEventListener('click', () => {
+        playerName = nameInput.value.trim() || 'SNACKER';
+        teamOverlay.classList.add('hidden');
+        score = 0;
+        goals = 0;
+        chipsLeft = 10;
+        difficulty = 1;
+        maxDifficulty = 1;
+        gameActive = true;
+        resetChip();
+        updateHUD();
+      });
 
-    // Touch support
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY })); }, { passive: false });
-    canvas.addEventListener('touchmove',  e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY })); }, { passive: false });
-    canvas.addEventListener('touchend',   e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mouseup')); }, { passive: false });
+      document.getElementById('restart-btn').addEventListener('click', () => {
+        document.getElementById('gameover-overlay').classList.add('hidden');
+        teamOverlay.classList.remove('hidden');
+      });
 
-    // ── Start / Restart ───────────────────────────────────────────────────────
-    function startGame() {
-      score = 0; chipsLeft = TOTAL_CHIPS; streak = 0; goals = 0;
-      particles = []; floatingTexts = [];
-      resetPositions();
-      resetChip();
-      updateHUD();
-      gameActive = true;
-      draw();
-    }
-
-    document.getElementById('start-btn').addEventListener('click', () => {
-      document.getElementById('start-overlay').style.opacity = '0';
-      setTimeout(() => { document.getElementById('start-overlay').style.display = 'none'; startGame(); }, 400);
-    });
-
-    document.getElementById('restart-btn').addEventListener('click', () => {
-      document.getElementById('gameover-overlay').style.display = 'none';
-      startGame();
-    });
-
-    // Initial draw (idle)
-    draw();
-  })();
+      window.addEventListener('resize', resize);
+      resize();
+      gameLoop();
+    })();
   </script>
 </body>
+
 </html>
